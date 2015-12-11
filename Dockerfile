@@ -35,6 +35,12 @@ RUN make cd-sounds-install cd-moh-install samples
 
 # RUN cp -f ./html5/verto/video_demo/dp/dp.xml /usr/local/freeswitch/conf/dialplan/default/0000_dp.xml
 
+WORKDIR /usr/local
+
+# clear out all unwanted cacahe
+RUN rm -rf /var/lib/apt/lists/*
+RUN rm -rf /usr/local/src/freeswitch-1.6.5
+
 ENV FREESWITCH_PATH /usr/local/freeswitch
 
 # create user 'freeswitch', add it to group 'daemon' and change owner/group right of the freeswitch installation
@@ -53,4 +59,4 @@ EXPOSE 8021/tcp
 EXPOSE 64535-65535/udp
 
 # Start the container.
-CMD ${FREESWITCH_PATH}/bin/freeswitch -ncwait -nonat && tail -f ${FREESWITCH_PATH}/log/freeswitch.log
+CMD ${FREESWITCH_PATH}/bin/freeswitch -nonat
