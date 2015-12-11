@@ -14,3 +14,22 @@ RUN echo "deb http://files.freeswitch.org/repo/deb/freeswitch-1.6/ jessie main" 
 RUN apt-get update -y
 
 RUN DEBIAN_FRONTEND=none APT_LISTCHANGES_FRONTEND=none apt-get install -y --force-yes freeswitch-video-deps-most
+
+WORKDIR /usr/local/src
+RUN wget -c -t 10 http://files.freeswitch.org/releases/freeswitch/freeswitch-1.6.5.tar.gz
+RUN tar -xvzf freeswitch-1.6.5.tar.gz
+
+WORKDIR /usr/local/src/freeswitch-1.6.5
+
+RUN ./rebootstrap.sh
+RUN ./configure --enable-core-odbc-support
+
+# enable compile of mod_av, mod_vlc
+RUN perl -i -pe 's/#formats\/mod_vlc/formats\/mod_vlc/g' modules.conf
+RUN perl -i -pe 's/#applications\/mod_av/applications\/mod_av/g' modules.conf
+
+# Compiling the code
+RUN make
+RUN make install
+RUN make cd-sounds-install cd-moh-install samples
+
