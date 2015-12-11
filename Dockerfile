@@ -33,3 +33,24 @@ RUN make
 RUN make install
 RUN make cd-sounds-install cd-moh-install samples
 
+# RUN cp -f ./html5/verto/video_demo/dp/dp.xml /usr/local/freeswitch/conf/dialplan/default/0000_dp.xml
+
+ENV FREESWITCH_PATH /usr/local/freeswitch
+
+# create user 'freeswitch', add it to group 'daemon' and change owner/group right of the freeswitch installation
+RUN adduser --gecos "FreeSWITCH Softswitch" --disabled-login --disabled-password --system --ingroup daemon --home ${FREESWITCH_PATH} freeswitch && \
+    chown -R freeswitch:daemon ${FREESWITCH_PATH} && \
+    chmod -R ug=rwX,o= ${FREESWITCH_PATH} && \
+    chmod -R u=rwx,g=rx ${FREESWITCH_PATH}/bin/*
+
+# Create the log file.
+RUN touch /usr/local/freeswitch/log/freeswitch.log
+RUN chown freeswitch:daemon /usr/local/freeswitch/log/freeswitch.log
+
+EXPOSE 5060/tcp 5060/udp 5080/tcp 5080/udp
+EXPOSE 5066/tcp 7443/tcp
+EXPOSE 8021/tcp
+EXPOSE 64535-65535/udp
+
+# Start the container.
+CMD ${FREESWITCH_PATH}/bin/freeswitch -ncwait -nonat && tail -f ${FREESWITCH_PATH}/log/freeswitch.log
