@@ -7,7 +7,7 @@ MAINTAINER ESTeoh <esteoh@gmail.com>
 
 RUN perl -pi -e 's/httpredir.debian.org/cloudfront.debian.net/g' /etc/apt/sources.list
 RUN apt-get update -y
-RUN DEBIAN_FRONTEND=none APT_LISTCHANGES_FRONTEND=none apt-get install -y wget curl git build-essential unixodbc unixodbc-dev
+RUN DEBIAN_FRONTEND=none APT_LISTCHANGES_FRONTEND=none apt-get install -y wget curl git net-tools build-essential unixodbc unixodbc-dev
 
 RUN curl http://files.freeswitch.org/repo/deb/debian/freeswitch_archive_g0.pub | apt-key add -
 RUN echo "deb http://files.freeswitch.org/repo/deb/freeswitch-1.6/ jessie main" > /etc/apt/sources.list.d/freeswitch.list
@@ -59,4 +59,4 @@ EXPOSE 8021/tcp
 EXPOSE 64535-65535/udp
 
 # Start the container.
-CMD ${FREESWITCH_PATH}/bin/freeswitch -nonat
+CMD /usr/local/freeswitch/bin/freeswitch -nonat
