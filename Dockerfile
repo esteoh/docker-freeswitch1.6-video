@@ -56,7 +56,7 @@ RUN chown freeswitch:daemon /usr/local/freeswitch/log/freeswitch.log
 EXPOSE 5060/tcp 5060/udp 5080/tcp 5080/udp
 EXPOSE 5066/tcp 7443/tcp
 EXPOSE 8021/tcp
-EXPOSE 64535-65535/udp
+EXPOSE 16384-32768/udp
 
 # Start the container.
 CMD /usr/local/freeswitch/bin/freeswitch -nonat
